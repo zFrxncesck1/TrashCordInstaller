@@ -11,10 +11,14 @@ import (
 	"vencord/buildinfo"
 )
 
-const ReleaseUrl = "https://api.github.com/repos/Equicord/Equicord/releases/latest"
-const ReleaseUrlFallback = "https://equicord.org/releases/equicord"
-const InstallerReleaseUrl = "https://api.github.com/repos/Equicord/Equilotl/releases/latest"
-const InstallerReleaseUrlFallback = "https://equicord.org/releases/equilotl"
+const (
+    ReleaseUrl = "https://api.github.com/repos/zFrxncesck1/TrashCord/releases/latest"
+    ReleaseUrlFallback = "https://trashcord.org/releases/trashcord"
+    InstallerReleaseUrl = "https://api.github.com/repos/zFrxncesck1/TrashCordInstaller/releases/latest"
+    InstallerReleaseUrlFallback = "https://trashcord.org/releases/trashcordin..."
+
+    UserAgent = "TrashCordInstaller/" + buildinfo.InstallerGitHash + " (https://github.com/zFrxncesck1/TrashCordInstaller)"
+)
 
 var UserAgent = "Equilotl/" + buildinfo.InstallerGitHash + " (https://github.com/Equicord/Equilotl)"
 

@@ -46,18 +46,18 @@ func init() {
 }
 
 func GetInstallerDownloadLink() string {
-	const BaseUrl = "https://github.com/Equicord/Equilotl/releases/latest/download/"
-	switch runtime.GOOS {
-	case "windows":
-		filename := Ternary(buildinfo.UiType == buildinfo.UiTypeCli, "EquilotlCli.exe", "Equilotl.exe")
-		return BaseUrl + filename
-	case "darwin":
-		return BaseUrl + "Equilotl.MacOS.zip"
-	case "linux":
-		return BaseUrl + "EquilotlCli-linux"
-	default:
-		return ""
-	}
+    const BaseUrl = "https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/"
+    switch runtime.GOOS {
+    case "windows":
+        filename := Ternary(buildinfo.UiType == buildinfo.UiTypeCli, "TrashCordInstallerCli.exe", "TrashCordInstaller.exe")
+        return BaseUrl + filename
+    case "darwin":
+        return BaseUrl + "TrashCordInstaller.MacOS.zip"
+    case "linux":
+        return BaseUrl + "TrashCordInstaller-linux"
+    default:
+        return ""
+    }
 }
 
 func CanUpdateSelf() bool {

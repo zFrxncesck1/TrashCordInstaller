@@ -1,6 +1,6 @@
-$link = "https://github.com/Equicord/Equilotl/releases/latest/download/EquilotlCli.exe"
+$link = "https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/TrashCordInstallerCli.exe"
 
-$outfile = "$env:TEMP\EquilotlCli.exe"
+$outfile = "$env:TEMP\TrashCordInstallerCli.exe"
 
 Write-Output "Downloading installer to $outfile"
 

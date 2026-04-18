@@ -224,12 +224,6 @@ jobs:
           name: TrashCordInstaller-linux
           path: linux
 
-      - name: "Download MacOS Artifacts"
-        uses: actions/download-artifact@v4
-        with:
-          name: TrashCordInstaller-macos
-          path: macos
-
       - name: "Download Windows Artifacts"
         uses: actions/download-artifact@v4
         with:
@@ -250,5 +244,4 @@ jobs:
           files: |
             linux/TrashCordInstaller-x11
             linux/TrashCordInstallerCli-linux
-            macos/TrashCordInstaller.MacOS.zip
             windows/TrashCordInstaller*.exe

@@ -10,12 +10,12 @@ Windows
 - [GUI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/TrashCordInstaller.exe) 
 - [CLI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/TrashCordInstaller.exe)
 
-MacOS = **Disabled**
+MacOS = **Doens't Worked**
 - [GUI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/TrashCordInstaller.MacOS.zip)
 
 Linux 
 - [GUI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/TrashCordInstaller-x11)
-- [CLI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/TrashCordInstaller-Linux)
+- [CLI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/TrashCordInstallerCli-linux)
 ## Building from source
 
 ### Prerequisites 

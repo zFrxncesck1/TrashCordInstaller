@@ -80,7 +80,7 @@ func main() {
 		os.Setenv("GDK_DPI_SCALE", "1")
 	}
 
-	win = g.NewMasterWindow("Equilotl", 1200, 800, linuxFlags)
+	win = g.NewMasterWindow("TrashCordInstaller", 1200, 800, linuxFlags)
 
 	icon, _, err := image.Decode(bytes.NewReader(iconBytes))
 	if err != nil {

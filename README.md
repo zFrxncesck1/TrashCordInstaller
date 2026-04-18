@@ -1,4 +1,4 @@
-# TrashCordInstaller
+# [<img src="https://github.com/zFrxncesck1/zFrxncesck1/blob/main/host/icons/TrashCord_icon.png" width="40" align="left" alt="TrashCord">](https://github.com/zFrxncesck1/TrashCord) TrashCordInstaller
 
 The TrashCord Installer allows you to install [TrashCord, the underground Discord client mod](https://github.com/zFrxncesck1/TrashCord)
 

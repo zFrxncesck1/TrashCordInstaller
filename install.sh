@@ -18,7 +18,7 @@ echo "Downloading Installer..."
 
 set -- "XDG_CONFIG_HOME=$XDG_CONFIG_HOME"
 
-curl -sS https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/TrashCordInstallerCli-linux ...
+curl -sS https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/TrashCordInstallerCli-linux --output "$outfile" --location --fail
   --output "$outfile" \
   --location \
   --fail

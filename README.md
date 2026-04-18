@@ -1,21 +1,21 @@
-# Equilotl
+# TrashCordInstaller
 
-The Equicord Installer allows you to install [Equicord, the cutest Discord Desktop client mod](https://github.com/Equicord/Equicord)
+The TrashCord Installer allows you to install [TrashCord, the underground Discord client mod](https://github.com/zFrxncesck1/TrashCord)
 
 ![image](https://i.imgur.com/oHN41ss.png)
 
 ## Usage
 
 Windows
-- [GUI](https://github.com/Equicord/Equilotl/releases/latest/download/Equilotl.exe) 
-- [CLI](https://github.com/Equicord/Equilotl/releases/latest/download/EquilotlCli.exe)
+- [GUI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/Equilotl.exe) 
+- [CLI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/EquilotlCli.exe)
 
-MacOS
-- [GUI](https://github.com/Equicord/Equilotl/releases/latest/download/Equilotl.MacOS.zip)
+MacOS = **Disabled**
+- [GUI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/Equilotl.MacOS.zip)
 
 Linux 
-- [GUI](https://github.com/Equicord/Equilotl/releases/latest/download/Equilotl-x11)
-- [CLI](https://github.com/Equicord/Equilotl/releases/latest/download/EquilotlCli-Linux)
+- [GUI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/Equilotl-x11)
+- [CLI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/EquilotlCli-Linux)
 ## Building from source
 
 ### Prerequisites 

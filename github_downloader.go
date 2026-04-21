@@ -143,52 +143,79 @@ func InitGithubDownloader() {
 }
 
 func installLatestBuilds() (retErr error) {
-	Log.Debug("Installing latest builds...")
+    Log.Debug("Installing latest builds...")
 
-	if IsDevInstall {
-		Log.Debug("Skipping due to dev install")
-		return
-	}
+    if IsDevInstall {
+        Log.Debug("Skipping due to dev install")
+        return
+    }
 
-	downloadUrl := ""
-	for _, ass := range ReleaseData.Assets {
-		if ass.Name == "desktop.asar" {
-			downloadUrl = ass.DownloadURL
-			break
-		}
-	}
+    downloadUrl := ""
+    for _, ass := range ReleaseData.Assets {
+        if ass.Name == "desktop.asar" {
+            downloadUrl = ass.DownloadURL
+            break
+        }
+    }
 
-	if downloadUrl == "" {
-		retErr = errors.New("Didn't find desktop.asar download link")
-		Log.Error(retErr)
-		return
-	}
+    if downloadUrl == "" {
+        retErr = errors.New("Didn't find desktop.asar download link")
+        Log.Error(retErr)
+        return
+    }
 
-	Log.Debug("Downloading desktop.asar")
+    Log.Debug("Downloading desktop.asar from", downloadUrl)
+
+    req, err := http.NewRequest("GET", downloadUrl, nil)
+    if err != nil {
+        retErr = fmt.Errorf("Failed to create request: %w", err)
+        Log.Error(retErr)
+        return
+    }
+    req.Header.Set("User-Agent", UserAgent)
+
+    res, err := http.DefaultClient.Do(req)
+    if err != nil {
+        retErr = fmt.Errorf("Failed to download: %w", err)
+        Log.Error(retErr)
+        return
+    }
+    defer res.Body.Close()
+
+    if res.StatusCode >= 300 {
+        retErr = fmt.Errorf("HTTP error: %s", res.Status)
+        Log.Error(retErr)
+        return
+    }
+
+    out, err := os.OpenFile(EquicordDirectory, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+    if err != nil {
+        retErr = fmt.Errorf("Failed to create %s: %w", EquicordDirectory, err)
+        Log.Error(retErr)
+        return
+    }
+    defer out.Close()
 
     read, err := io.Copy(out, res.Body)
     if err != nil {
-        Log.Error("Failed to download to", EquicordDirectory+":", err)
-        retErr = err
+        retErr = fmt.Errorf("Failed to write to %s: %w", EquicordDirectory, err)
+        Log.Error(retErr)
         return
     }
+
     contentLength := res.Header.Get("Content-Length")
-    expected := strconv.FormatInt(read, 10)
-    if expected != contentLength {
-        err = errors.New("Unexpected end of input. Content-Length was " + contentLength + ", but I only read " + expected)
-        Log.Error(err.Error())
-        retErr = err
-        return
-    }
-
-    _ = out.Close()
-
-    if err := patchAsar(EquicordDirectory); err != nil {
-        Log.Warn("Failed to patch asar:", err)
+    if contentLength != "" {
+        expected, _ := strconv.ParseInt(contentLength, 10, 64)
+        if read != expected {
+            retErr = fmt.Errorf("Size mismatch: read %d, expected %d", read, expected)
+            Log.Error(retErr)
+            return
+        }
     }
 
     _ = FixOwnership(EquicordDirectory)
 
     InstalledHash = LatestHash
+    Log.Info("Successfully downloaded and installed desktop.asar")
     return
 }

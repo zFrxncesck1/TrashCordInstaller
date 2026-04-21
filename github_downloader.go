@@ -214,7 +214,6 @@ func installLatestBuilds() (retErr error) {
     }
 
     _ = FixOwnership(EquicordDirectory)
-
     InstalledHash = LatestHash
     Log.Info("Successfully downloaded and installed desktop.asar")
     return

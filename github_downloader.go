@@ -166,48 +166,29 @@ func installLatestBuilds() (retErr error) {
 
 	Log.Debug("Downloading desktop.asar")
 
-	res, err := http.Get(downloadUrl)
-	if err == nil && res.StatusCode >= 300 {
-		err = errors.New(res.Status)
-	}
-	if err != nil {
-		Log.Error("Failed to download desktop.asar:", err)
-		retErr = err
-		return
-	}
-	defer res.Body.Close()
+    read, err := io.Copy(out, res.Body)
+    if err != nil {
+        Log.Error("Failed to download to", EquicordDirectory+":", err)
+        retErr = err
+        return
+    }
+    contentLength := res.Header.Get("Content-Length")
+    expected := strconv.FormatInt(read, 10)
+    if expected != contentLength {
+        err = errors.New("Unexpected end of input. Content-Length was " + contentLength + ", but I only read " + expected)
+        Log.Error(err.Error())
+        retErr = err
+        return
+    }
 
-	out, err := os.OpenFile(EquicordDirectory, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-	if err != nil {
-		Log.Error("Failed to create", EquicordDirectory+":", err)
-		retErr = err
-		return
-	}
-	defer out.Close()
+    _ = out.Close()
 
-	read, err := io.Copy(out, res.Body)
-	if err != nil {
-		Log.Error("Failed to download to", EquicordDirectory+":", err)
-		retErr = err
-		return
-	}
-	contentLength := res.Header.Get("Content-Length")
-	expected := strconv.FormatInt(read, 10)
-	if expected != contentLength {
-		err = errors.New("Unexpected end of input. Content-Length was " + contentLength + ", but I only read " + expected)
-		Log.Error(err.Error())
-		retErr = err
-		return
-	}
+    if err := patchAsar(EquicordDirectory); err != nil {
+        Log.Warn("Failed to patch asar:", err)
+    }
 
-	out.Close()
+    _ = FixOwnership(EquicordDirectory)
 
-	if err := patchAsar(EquicordDirectory); err != nil {
-		Log.Warn("Failed to patch asar:", err)
-	}
-
-	_ = FixOwnership(EquicordDirectory)
-
-	InstalledHash = LatestHash
-	return
+    InstalledHash = LatestHash
+    return
 }

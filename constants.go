@@ -11,10 +11,11 @@ import (
 	"vencord/buildinfo"
 )
 
+// https://zfrxncesck1.github.io/trashcord-fallback/releases/trashcord.json
 const ReleaseUrl = "https://api.github.com/repos/zFrxncesck1/TrashCord/releases/latest"
-const ReleaseUrlFallback = "https://trashcord.org/releases/trashcord"
+const ReleaseUrlFallback = ""
 const InstallerReleaseUrl = "https://api.github.com/repos/zFrxncesck1/TrashCordInstaller/releases/latest"
-const InstallerReleaseUrlFallback = "https://trashcord.org/releases/trashcordin"
+const InstallerReleaseUrlFallback = ""
 
 var UserAgent = "TrashCordInstaller/" + buildinfo.InstallerGitHash + " (https://github.com/zFrxncesck1/TrashCordInstaller)"
 

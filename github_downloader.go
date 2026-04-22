@@ -47,12 +47,17 @@ func GetGithubRelease(url, fallbackUrl string) (*GithubRelease, error) {
 
 	req.Header.Set("User-Agent", UserAgent)
 
-	res, err := http.DefaultClient.Do(req)
+	client := &http.Client{
+		Transport: &http.Transport{
+			ForceAttemptHTTP2: false,
+		},
+	}
+
+	res, err := client.Do(req)
 	if err != nil {
 		Log.Error("Failed to send Request", err)
 		return nil, err
 	}
-
 	defer res.Body.Close()
 
 	if res.StatusCode >= 300 {
@@ -90,7 +95,6 @@ func InitGithubDownloader() {
 	}
 
 	go func() {
-		// Make sure UI updates once the request either finished or failed
 		defer func() {
 			GithubDoneChan <- GithubError == nil
 		}()
@@ -109,7 +113,6 @@ func InitGithubDownloader() {
 		Log.Debug("Latest hash is", LatestHash, "Local Install is", Ternary(LatestHash == InstalledHash, "up to date!", "outdated!"))
 	}()
 
-	// either .asar file or directory with main.js file (in DEV)
 	EquicordFile := EquicordDirectory
 
 	stat, err := os.Stat(EquicordFile)
@@ -117,12 +120,10 @@ func InitGithubDownloader() {
 		return
 	}
 
-	// dev
 	if stat.IsDir() {
 		EquicordFile = path.Join(EquicordFile, "main.js")
 	}
 
-	// Check hash of installed version if exists
 	b, err := os.ReadFile(EquicordFile)
 	if err != nil {
 		return
@@ -138,83 +139,88 @@ func InitGithubDownloader() {
 
 	} else {
 		Log.Debug("Didn't find hash")
-
 	}
 }
 
 func installLatestBuilds() (retErr error) {
-    Log.Debug("Installing latest builds...")
+	Log.Debug("Installing latest builds...")
 
-    if IsDevInstall {
-        Log.Debug("Skipping due to dev install")
-        return
-    }
+	if IsDevInstall {
+		Log.Debug("Skipping due to dev install")
+		return
+	}
 
-    downloadUrl := ""
-    for _, ass := range ReleaseData.Assets {
-        if ass.Name == "desktop.asar" {
-            downloadUrl = ass.DownloadURL
-            break
-        }
-    }
+	downloadUrl := ""
+	for _, ass := range ReleaseData.Assets {
+		if ass.Name == "desktop.asar" {
+			downloadUrl = ass.DownloadURL
+			break
+		}
+	}
 
-    if downloadUrl == "" {
-        retErr = errors.New("Didn't find desktop.asar download link")
-        Log.Error(retErr)
-        return
-    }
+	if downloadUrl == "" {
+		retErr = errors.New("Didn't find desktop.asar download link")
+		Log.Error(retErr)
+		return
+	}
 
-    Log.Debug("Downloading desktop.asar from", downloadUrl)
+	Log.Debug("Downloading desktop.asar from", downloadUrl)
 
-    req, err := http.NewRequest("GET", downloadUrl, nil)
-    if err != nil {
-        retErr = fmt.Errorf("Failed to create request: %w", err)
-        Log.Error(retErr)
-        return
-    }
-    req.Header.Set("User-Agent", UserAgent)
+	client := &http.Client{
+		Transport: &http.Transport{
+			ForceAttemptHTTP2: false,
+		},
+	}
 
-    res, err := http.DefaultClient.Do(req)
-    if err != nil {
-        retErr = fmt.Errorf("Failed to download: %w", err)
-        Log.Error(retErr)
-        return
-    }
-    defer res.Body.Close()
+	req, err := http.NewRequest("GET", downloadUrl, nil)
+	if err != nil {
+		retErr = fmt.Errorf("Failed to create request: %w", err)
+		Log.Error(retErr)
+		return
+	}
+	req.Header.Set("User-Agent", UserAgent)
 
-    if res.StatusCode >= 300 {
-        retErr = fmt.Errorf("HTTP error: %s", res.Status)
-        Log.Error(retErr)
-        return
-    }
+	res, err := client.Do(req)
+	if err != nil {
+		retErr = fmt.Errorf("Failed to download: %w", err)
+		Log.Error(retErr)
+		return
+	}
+	defer res.Body.Close()
 
-    out, err := os.OpenFile(EquicordDirectory, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-    if err != nil {
-        retErr = fmt.Errorf("Failed to create %s: %w", EquicordDirectory, err)
-        Log.Error(retErr)
-        return
-    }
-    defer out.Close()
+	if res.StatusCode >= 300 {
+		retErr = fmt.Errorf("HTTP error: %s", res.Status)
+		Log.Error(retErr)
+		return
+	}
 
-    read, err := io.Copy(out, res.Body)
-    if err != nil {
-        retErr = fmt.Errorf("Failed to write to %s: %w", EquicordDirectory, err)
-        Log.Error(retErr)
-        return
-    }
+	out, err := os.OpenFile(EquicordDirectory, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		retErr = fmt.Errorf("Failed to create %s: %w", EquicordDirectory, err)
+		Log.Error(retErr)
+		return
+	}
+	defer out.Close()
 
-    contentLength := res.Header.Get("Content-Length")
-    if contentLength != "" {
-        expected, _ := strconv.ParseInt(contentLength, 10, 64)
-        if read != expected {
-            retErr = fmt.Errorf("Size mismatch: read %d, expected %d", read, expected)
-            Log.Error(retErr)
-            return
-        }
-    }
+	read, err := io.Copy(out, res.Body)
+	if err != nil {
+		retErr = fmt.Errorf("Failed to write to %s: %w", EquicordDirectory, err)
+		Log.Error(retErr)
+		return
+	}
 
-    _ = FixOwnership(EquicordDirectory)
-    InstalledHash = LatestHash
-    Log.Info("Successfully downloaded and installed desktop.asar")
-    return
+	contentLength := res.Header.Get("Content-Length")
+	if contentLength != "" {
+		expected, _ := strconv.ParseInt(contentLength, 10, 64)
+		if read != expected {
+			retErr = fmt.Errorf("Size mismatch: read %d, expected %d", read, expected)
+			Log.Error(retErr)
+			return
+		}
+	}
+
+	_ = FixOwnership(EquicordDirectory)
+	InstalledHash = LatestHash
+	Log.Info("Successfully downloaded and installed desktop.asar")
+	return
 }

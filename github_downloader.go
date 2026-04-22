@@ -130,7 +130,7 @@ func InitGithubDownloader() {
 
 	Log.Debug("Found existing TrashCord Install. Checking for hash...")
 
-	re := regexp.MustCompile(`// TrashCord (\w+)`)
+	re := regexp.MustCompile(`// Equicord (\w+)`)
 	match := re.FindSubmatch(b)
 	if match != nil {
 		InstalledHash = string(match[1])

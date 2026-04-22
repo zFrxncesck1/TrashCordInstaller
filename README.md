@@ -10,8 +10,8 @@ Windows
 - [GUI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/TrashCordInstaller.exe) 
 - [CLI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/TrashCordInstaller.exe)
 
-MacOS = **Doens't Worked**
-- [GUI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/TrashCordInstaller.MacOS.zip)
+~~MacOS~~ = **Doesn't Worked**
+- [~~GUI~~](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/TrashCordInstaller.MacOS.zip)
 
 Linux 
 - [GUI](https://github.com/zFrxncesck1/TrashCordInstaller/releases/latest/download/TrashCordInstaller-x11)
